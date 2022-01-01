@@ -20,10 +20,10 @@ long long VectorToInt(std::vector<int>);
 void readInput(std::vector<int> &draw_numbers, matrix &boards,
   const std::string file_name);
 
-std::vector<int> vectorizeStrToInt(std::vector<std::string> &input,
+void vectorizeStrToInt(std::vector<std::string> &input,
     std::vector<int> &output);
 
-std::vector<int> vectorizeStrToInt(std::vector<std::string> &input,
+void vectorizeStrToInt(std::vector<std::string> &input,
     std::vector<int> &output)
 {
     std::string str;
@@ -45,6 +45,8 @@ void readInput(std::vector<int> &draw_numbers, matrix &boards,
     std::fstream infile(file_name);
     int lineNo = 0;
 
+    printf("Raw input: \n");
+
     while ( getline(infile,line) )
     {
         input1.push_back(line);
@@ -65,6 +67,9 @@ void readInput(std::vector<int> &draw_numbers, matrix &boards,
     // use the meta struct to see check for bingo
     vectorizeStrToInt(input1, draw_numbers);
 
+    printf("print drawn numbers: \n");
+    for (auto n : draw_numbers) { printf("%d,",n); }
+
     infile.close();
 }
 
@@ -76,8 +81,5 @@ int main()
     std::cin >> file_name;
 
     readInput(draw_numbers, bingo_boards, file_name);
-    printf("print draw numbers: \n");
-    for (auto n : draw_numbers) { std::cout << n << ','; }
-    std::cout<<'\n';
     return 0;
 }
