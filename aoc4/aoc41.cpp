@@ -28,9 +28,13 @@ void vectorizeStrToInt(std::vector<std::string> &input,
 {
     std::string str;
     std::vector<int> v;
-    for ( auto c : input[0] ){
-        if ( isdigit(c) ) { str+=c; }
-        else { v.push_back(std::stoi(str)); str.clear(); }
+    for ( auto line : input ) {
+        for ( auto c : line ) {
+            if ( isdigit(c) ) { str+=c; }
+            else {
+                if(!str.empty()) {
+                    v.push_back(std::stoi(str)); str.clear(); } }
+        }
     }
     output = v;
 }
@@ -54,22 +58,35 @@ void readInput(std::vector<int> &draw_numbers, matrix &boards,
         lineNo += 1;
         if (lineNo > 0) { break; }
     }
+    vectorizeStrToInt(input1, draw_numbers);
+
     while ( getline(infile,line) )
     {
         if (lineNo > 1) {
-            input2.push_back(line);
+            input2.push_back(line + " ");
             std::cout << line << std::endl;
         }
         lineNo += 1;
     }
-    // get the first line, these are the bingo numbers, csv
-    // the remaining numbers are all the bingo boards, put them in the matrix
-    // use the meta struct to see check for bingo
-    vectorizeStrToInt(input1, draw_numbers);
-
-    printf("print drawn numbers: \n");
-    for (auto n : draw_numbers) { printf("%d,",n); }
-
+    
+    std::vector<int> output;
+    vectorizeStrToInt(input2, output);
+    int i = 0;
+    while (i<output.size()) {
+        for (int j=0; j<5; j++) {
+            std::vector<meta> board;
+            for (int k=0; k<5; k++) {
+                meta entry;
+                entry.row = j;
+                entry.col = k;
+                entry.marked = false;
+                entry.number = output[i];
+                board.push_back(entry);
+                i+=1;
+            }
+            boards.push_back(board);
+        }
+    }
     infile.close();
 }
 
@@ -81,5 +98,9 @@ int main()
     std::cin >> file_name;
 
     readInput(draw_numbers, bingo_boards, file_name);
+
+    printf("Print drawn numbers: \n");
+    for (auto n : draw_numbers) { printf("%d,", n); }
+
     return 0;
 }
