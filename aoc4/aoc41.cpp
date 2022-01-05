@@ -5,19 +5,28 @@
 #include <algorithm>
 #include <typeinfo>
 #include <ctype.h>
+#include <math.h>
 
 typedef struct meta {
-  bool marked;
-  int number;
-  int row;
-  int col;
+    int drawn;
+    int number;
+    int row;
+    int col;
 } meta;
-
-typedef std::vector<std::vector<meta>> matrix;
+typedef std::vector<meta> matrix;
+typedef std::vector<matrix> matrices;
 
 long long VectorToInt(std::vector<int>);
 
-void readInput(std::vector<int> &draw_numbers, matrix &boards,
+bool checkAllTrue(std::vector<int> v);
+
+bool checkIfBingo(matrix &board, int index);
+
+void indecesOfColumns(const int row, const int col, std::vector<int> &);
+
+void indecesOfRows(const int row, std::vector<int> &);
+
+void readInput(std::vector<int> &draw_numbers, matrices &boards,
   const std::string file_name);
 
 void vectorizeStrToInt(std::vector<std::string> &input,
@@ -35,11 +44,14 @@ void vectorizeStrToInt(std::vector<std::string> &input,
                 if(!str.empty()) {
                     v.push_back(std::stoi(str)); str.clear(); } }
         }
+        if(!str.empty()) {
+            v.push_back(std::stoi(str)); str.clear();
+        }
     }
     output = v;
 }
 
-void readInput(std::vector<int> &draw_numbers, matrix &boards,
+void readInput(std::vector<int> &draw_numbers, matrices &boards,
   const std::string file_name) {
 
     std::cout << "Reading from file: " << file_name << std::endl;
@@ -63,44 +75,130 @@ void readInput(std::vector<int> &draw_numbers, matrix &boards,
     while ( getline(infile,line) )
     {
         if (lineNo > 1) {
-            input2.push_back(line + " ");
+            input2.push_back(line);
             std::cout << line << std::endl;
         }
         lineNo += 1;
     }
-    
+
     std::vector<int> output;
     vectorizeStrToInt(input2, output);
     int i = 0;
     while (i<output.size()) {
+        std::vector<meta> board;
         for (int j=0; j<5; j++) {
-            std::vector<meta> board;
             for (int k=0; k<5; k++) {
                 meta entry;
                 entry.row = j;
                 entry.col = k;
-                entry.marked = false;
+                entry.drawn = false;
+                // printf("put number %d \n", output[i]);
                 entry.number = output[i];
                 board.push_back(entry);
                 i+=1;
             }
-            boards.push_back(board);
         }
+        boards.push_back(board);
     }
     infile.close();
+}
+
+void indecesOfColumns(const int row, const int col, std::vector<int> &indeces) {
+    static int index;
+    int i = 0;
+    while(i<5) {
+        index = i*5 + col;
+        indeces.push_back( index );
+        i+=1;
+    }
+}
+
+void indecesOfRows(const int row, std::vector<int> &indeces) {
+    int index;
+    int i = 0;
+    while(i<5) {
+        index = row*5 + i;
+        indeces.push_back( index );
+        i+=1;
+    }
+}
+
+bool checkAllTrue(std::vector<int> v) {
+    for (int val : v) {
+        if(val == 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool checkIfBingo(matrix &board, int index) {
+    int target;
+    std::vector<int> columns;
+    std::vector<int> rows;
+    std::vector<int> bingo_cols;
+    std::vector<int> bingo_rows;
+
+    indecesOfColumns(board[index].row, board[index].col, columns);
+    for (auto i : columns) { bingo_cols.push_back(board[i].drawn); }
+
+    indecesOfRows(board[index].row, rows);
+    for (auto i : rows) { bingo_rows.push_back(board[i].drawn); }
+
+    if(checkAllTrue(bingo_cols)) {
+            int sum = 0;
+            printf("winning col: \n");
+            for (int i=0; i<25; i++) {
+                printf("%d ", board[i].number);
+                if (board[i].drawn == 0) {
+                    sum += board[i].number;
+                }
+            }
+            target = sum*board[index].number;
+            printf("target: %d \n", target);
+            return true;
+        }
+
+    if(checkAllTrue(bingo_rows)) {
+            int sum = 0;
+            printf("winning row: \n");
+            for (int i=0; i<25; i++) {
+                printf("%d ", board[i].number);
+                if (board[i].drawn == 0) {
+                    sum += board[i].number;
+                }
+            }
+            printf("\n%d * %d = ", sum, board[index].number);
+            target = sum*board[index].number;
+            printf("%d \n", target);
+            return true;
+        }
+
+    return false;
 }
 
 int main()
 {
     std::string file_name;
     std::vector<int> draw_numbers;
-    matrix bingo_boards;
+    matrices bingo_boards;
     std::cin >> file_name;
 
     readInput(draw_numbers, bingo_boards, file_name);
 
-    printf("Print drawn numbers: \n");
-    for (auto n : draw_numbers) { printf("%d,", n); }
-
+    for (auto n : draw_numbers) {
+        for (int m=0; m<bingo_boards.size(); m++) {
+            for (int i=0; i<25; i++) {
+                if (n == bingo_boards[m][i].number) {
+                    bingo_boards[m][i].drawn = 1;
+                    if (checkIfBingo(bingo_boards[m], i)) {
+                        printf("bingo\n");
+                        return 0;
+                    }
+                }
+            }
+        }
+    }
     return 0;
 }
