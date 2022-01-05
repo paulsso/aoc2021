@@ -1,0 +1,17 @@
+1. When appending to a string, using a named function might not work as well as you think, instead just use:
+str+=c
+
+2. isdigit(c) is helpful when parsing strings that you want to convert to integers, it makes std::stoi work
+without a hitch
+
+3. Compounding conditions should always be guarded with a pair of () for each condition, otherwise it makes
+it look like its evaluating something that it is not
+
+4. When looping over objects using an iterator such as in:
+    for (auto v : vector) {
+        /* do stuff */
+    }
+you can manipulate v by declaring a reference to it, like so
+    for (auto &v : vector) {
+        /* do stuff to v */
+    } 
