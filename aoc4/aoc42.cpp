@@ -183,7 +183,7 @@ bool checkIfBingo(matrix &board, int index, int has_won) {
 
 int main()
 {
-    std::vector<int> has_won;
+    std::vector<bool> has_won;
     std::string file_name;
     std::vector<int> draw_numbers;
     matrices bingo_boards;
@@ -192,7 +192,7 @@ int main()
     readInput(draw_numbers, bingo_boards, file_name);
     
     for (int i; i<bingo_boards.size(); i++) {
-        has_won.push_back(0);
+        has_won.push_back(false);
     }
 
     for (auto n : draw_numbers) {
@@ -200,11 +200,8 @@ int main()
             for (int i=0; i<25; i++) {
                 if (n == bingo_boards[m][i].number) {
                     bingo_boards[m][i].drawn = 1;
-                    if (checkIfBingo(bingo_boards[m], i, has_won[m])) {
-                        if (has_won[m] == 0) {
-                            has_won[m] = 1;
-                            printf("bingo\n");
-                        }
+                    if (checkIfBingo(bingo_boards[m], i, has_won[m]) && (!has_won[m])) {
+                        has_won[m] = true;
                     }
                 }
             }
