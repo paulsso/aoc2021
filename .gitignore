@@ -28,6 +28,7 @@
 
 # Executables
 *.exe
+*.exe.*
 *.out
 *.app
 
@@ -36,12 +37,15 @@
 *.vcxproj.*
 *.sln
 *.tlog
-*.pbd
 *.vsidx
 *.lock
 *.VC.*
 *.suo
 *.ipch
+*.idb
+*.pdb
+*.log
+*.ilk
 
 # Build files
 x64/*
