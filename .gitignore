@@ -35,7 +35,13 @@
 *.vcxproj
 *.vcxproj.*
 *.sln
-.vs/*
+*.tlog
+*.pbd
+*.vsidx
+*.lock
+*.VC.*
+*.suo
+*.ipch
 
 # Build files
 x64/*
