@@ -11,13 +11,17 @@ int main() {
 	auto input = InputHandler.returnInput("test.txt");
 
 	FishAutomata.setInitialState(input);
-	for (int i = 0; i < 257; i++) {
-		FishAutomata.alterState();
-		std::cout << "Day " << i << std::endl;
-	}
 	auto output = FishAutomata.getState();
 
-	std::cout << "The answer is " << output.size() << std::endl;
+	for (int i = 0; i < 257; i++) {
+		FishAutomata.alterState(output);
+		std::cout << "Day " << i << std::endl;
+	}
 
+	unsigned long sum = 0;
+	for (int i = 0; i < output.size(); i++) {
+		sum += output[i];
+	}
+	std::cout << "Answer: " << sum << std::endl;
 	return 0;
 }

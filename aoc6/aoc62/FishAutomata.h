@@ -3,12 +3,10 @@
 
 class FishAutomata
 {
-private:
-	int alterElement(int &n);
 public:
-	std::vector<int> initialState;
-	std::vector<int> getState();
-	void alterState();
+	std::vector<unsigned long> initialState;
+	std::vector<unsigned long> getState();
+	void alterState(std::vector<unsigned long>& v);
 	void setInitialState(std::vector<int>&);
 };
 

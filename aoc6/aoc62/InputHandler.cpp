@@ -9,7 +9,7 @@ void InputHandler::readInput(std::string filename) {
 	while (getline(infile, line)) {
 		for (int i = 0; i < line.size(); i+=2) {
 			j = line[i];
-			InputHandler::inputData.push_back(j-47);
+			InputHandler::inputData.push_back(j-48);
 		}
 	}
 	infile.close();
