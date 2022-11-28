@@ -9,19 +9,21 @@ int main() {
 	InputHandler InputHandler;
 	FishAutomata FishAutomata;
 	auto input = InputHandler.returnInput("test.txt");
+	unsigned long long sum = 0;
+	unsigned long long reproductiveFish;
 
 	FishAutomata.setInitialState(input);
 	auto output = FishAutomata.getState();
 
-	for (int i = 0; i < 257; i++) {
+	for (int i = 0; i < 256; i++) {
 		FishAutomata.alterState(output);
-		std::cout << "Day " << i << std::endl;
 	}
 
-	unsigned long sum = 0;
 	for (int i = 0; i < output.size(); i++) {
 		sum += output[i];
 	}
-	std::cout << "Answer: " << sum << std::endl;
+
+	std::cout << "The answer is: " << sum << std::endl;
+
 	return 0;
 }
